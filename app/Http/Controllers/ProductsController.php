@@ -74,11 +74,16 @@ class ProductsController extends Controller
     public function edit($id)
     {
         $product = ProductsModel::findOrFail($id);
+    
+        // Convert image path to full URL if it exists
+        if ($product->image) {
+            $product->image = asset($product->image);
+        }
+    
         return response()->json([
             'product' => $product
         ]);
     }
-    
     // Update a product by its ID
     public function update(Request $request, $id)
     {
@@ -105,8 +110,6 @@ class ProductsController extends Controller
         
                 if (File::exists($imagePath)) {
                     File::delete($imagePath);
-                } else {
-                    
                 }
             } 
     

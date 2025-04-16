@@ -1,4 +1,3 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 @extends('layouts.master')
 @section('content')
 <div class="py-12">
@@ -177,6 +176,8 @@
                     $('#message').html(`<div class="alert alert-success">${response.success}</div>`);
                     $('#productForm')[0].reset();
                     $('#addProductModal').modal('hide');
+                   
+
                     let newRow = `<tr id="product_${response.product.id}">
                         <td>${response.product.index}</td>
                         <td>${response.product.name}</td>
@@ -185,8 +186,11 @@
                         <td><button class="btn btn-warning btn-sm editProductBtn" data-id="${response.product.id}">Edit</button>
                         <button class="btn btn-danger btn-sm deleteProductBtn" data-id="${response.product.id}">Delete</button></td>
                     </tr>`;
-                    // $('#productTable').append(newRow);
-                    $('#productTable').prepend(newRow);
+                    $('#productTable').append(newRow);
+                    // $('#productTable').prepend(newRow);
+                    // $('body').removeClass('modal-open');
+                    // $('.modal-backdrop').remove();
+                    $('#addProductModal').modal('hide');
                 },
                 error: function(xhr) {
                     if (xhr.status === 422) {
@@ -241,6 +245,9 @@
                     $('#message').html(`<div class="alert alert-success">${response.success}</div>`);
                     $('#editProductForm')[0].reset();
                     $('#editProductModal').modal('hide');
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').remove();
+
                     $(`#product_${response.product.id} td:nth-child(2)`).text(response.product.name);
                     $(`#product_${response.product.id} td:nth-child(3)`).text(response.product.description);
                     $(`#product_${response.product.id} td:nth-child(4) img`).attr('src', response.product.image);
@@ -290,5 +297,4 @@
             });
         });
     </script>
-
 @endsection

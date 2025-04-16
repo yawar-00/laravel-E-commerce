@@ -54,6 +54,7 @@
   transition: background 0.3s;
 }
 
+
 .nav-links a i {
   width: 25px;
   font-size: 18px;
@@ -73,6 +74,14 @@
 .nav-links a:hover {
   background-color: #00b894;
   border-radius: 4px;
+}
+.active {
+  font-weight: bold;
+  background-color: #00b894;
+
+  color: white;
+  border-radius: 5px;
+  padding: 5px 10px;
 }
 
 /* Topbar */
@@ -143,16 +152,37 @@
       <h2>AdminPanel</h2>
     </div>
     <ul class="nav-links">
-      <li><a href="{{route('AdminDashboard')}}"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
-      <li><a href="{{route('products')}}"><i class="fas fa-box"></i><span>Products</span></a></li>
-      <li><a href="#"><i class="fas fa-shopping-cart"></i><span>Orders</span></a></li>
-      <li><a href="#"><i class="fas fa-cogs"></i><span>Settings</span></a></li>
-      <li><a href="#"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
-    </ul>
+  <li>
+    <a href="{{ route('AdminDashboard') }}" class="{{ request()->routeIs('AdminDashboard') ? 'active' : '' }}">
+      <i class="fas fa-tachometer-alt"></i><span>Dashboard</span>
+    </a>
+  </li>
+  <li>
+    <a href="{{ route('products') }}" class="{{ request()->routeIs('products') ? 'active' : '' }}">
+      <i class="fas fa-box"></i><span>Products</span>
+    </a>
+  </li>
+  <li>
+    <a href="#" class="{{ request()->routeIs('orders') ? 'active' : '' }}">
+      <i class="fas fa-shopping-cart"></i><span>Orders</span>
+    </a>
+  </li>
+  <li>
+    <a href="#" class="{{ request()->routeIs('settings') ? 'active' : '' }}">
+      <i class="fas fa-cogs"></i><span>Settings</span>
+    </a>
+  </li>
+  <li>
+    <a href="#" class="{{ request()->routeIs('logout') ? 'active' : '' }}">
+      <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+    </a>
+  </li>
+</ul>
+
   </div>
-  <script>
-    const toggleBtn = document.getElementById('toggleBtn');
-const sidebar = document.getElementById('sidebar');
+  <!-- <script>
+    var toggleBtn = document.getElementById('toggleBtn');
+var sidebar = document.getElementById('sidebar');
 
 toggleBtn.addEventListener('click', () => {
   sidebar.classList.toggle('collapsed');
@@ -162,4 +192,4 @@ toggleBtn.addEventListener('click', () => {
     sidebar.classList.toggle('show');
   }
 });
-</script>
+</script> -->
