@@ -20,7 +20,7 @@ class ProductsController extends Controller
 
     public function index(Request $request)
     {
-        $products = ProductsModel::with(['category'])->get();
+        $products = ProductsModel::with(['category'])->latest()->get();
         // dd($products);
         return view('products', compact('products'));
     }

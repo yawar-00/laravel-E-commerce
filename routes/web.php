@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\adminController;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\Users1Controller;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductsController;
 
@@ -15,15 +18,22 @@ use App\Http\Controllers\ProductsController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
+// preventBack
+Route::middleware('preventBack')->get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('/dashboard')->group(function(){
-    Route::get('/', [adminController::class, 'index'] )->middleware(['auth', 'verified'])->name('AdminDashboard');
-    // Route::get('/dashboard', [ProductsController::class, 'index'] )->middleware(['auth', 'verified'])->name('dashboard');
-    Route::get('/products', [ProductsController::class, 'index'] )->middleware(['auth', 'verified'])->name('products');
+Route::get('/user',[Users1Controller::class,'create']);
+Route::get('/post',[PostController::class,'create']);
+
+
+Route::middleware('preventBack')->group(function(){
+    Route::prefix('/dashboard')->group(function(){
+        Route::get('/', [adminController::class, 'index'] )->middleware(['auth', 'verified'])->name('AdminDashboard');
+        // Route::get('/dashboard', [ProductsController::class, 'index'] )->middleware(['auth', 'verified'])->name('dashboard');
+        Route::get('/products', [ProductsController::class, 'index'] )->middleware(['auth', 'verified'])->name('products');
+        Route::get('/users', [UsersController::class, 'index'] )->middleware(['auth', 'verified'])->name('users');
+    });
 });
 Route::prefix('products')->group(function(){
     Route::post('/save-item', [ProductsController::class, 'store'])->name('product.store');

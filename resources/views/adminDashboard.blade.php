@@ -1,61 +1,65 @@
 @extends('layouts.master')
 @section('content')
-<div class="container mt-5">
-  <div class="row g-4">
-
-    <!-- Users Card -->
-    <div class="col-md-3">
-      <div class="card text-white bg-primary h-100 shadow">
-        <div class="card-body d-flex flex-column justify-content-between">
-          <div>
-            <h5 class="card-title">Total Users</h5>
-            <h2>1,250</h2>
-          </div>
-          <i class="fas fa-users fa-2x"></i>
+<div class="container-fluid mt-4">
+    <div class="row g-4">
+        <!-- Card 1 -->
+        <div class="col-md-4">
+            <div class="card shadow rounded-4 border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-box fa-2x text-primary mb-3"></i>
+                    <h5 class="card-title">Total Products</h5>
+                    <p class="card-text fs-4 fw-bold">{{ $productscount }}</p>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Orders Card -->
-    <div class="col-md-3">
-      <div class="card text-white bg-success h-100 shadow">
-        <div class="card-body d-flex flex-column justify-content-between">
-          <div>
-            <h5 class="card-title">Orders</h5>
-            <h2>865</h2>
-          </div>
-          <i class="fas fa-shopping-cart fa-2x"></i>
+        <!-- Card 2 -->
+        <div class="col-md-4">
+            <div class="card shadow rounded-4 border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-2x text-success mb-3"></i>
+                    <h5 class="card-title">Total Users</h5>
+                    <p class="card-text fs-4 fw-bold">{{ $userscount }}</p>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Revenue Card -->
-    <div class="col-md-3">
-      <div class="card text-white bg-warning h-100 shadow">
-        <div class="card-body d-flex flex-column justify-content-between">
-          <div>
-            <h5 class="card-title">Revenue</h5>
-            <h2>$24,320</h2>
-          </div>
-          <i class="fas fa-dollar-sign fa-2x"></i>
+        <!-- Card 3 -->
+        <div class="col-md-4">
+            <div class="card shadow rounded-4 border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line fa-2x text-warning mb-3"></i>
+                    <h5 class="card-title">Sales Today</h5>
+                    <p class="card-text fs-4 fw-bold">₹5,200</p>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Products Card -->
-    <div class="col-md-3">
-      <div class="card text-white bg-danger h-100 shadow">
-        <div class="card-body d-flex flex-column justify-content-between">
-          <div>
-            <h5 class="card-title">Products</h5>
-            <h2>324</h2>
-          </div>
-          <i class="fas fa-boxes fa-2x"></i>
+        <!-- Card 4 -->
+        <div class="col-md-4">
+            <div class="card shadow rounded-4 border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-layer-group fa-2x text-info mb-3"></i>
+                    <h5 class="card-title">Categories</h5>
+                    <p class="card-text fs-4 fw-bold">{{$categoriescount}}</p>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-  </div>
+        <!-- Card 5 -->
+        <div class="col-md-4">
+            <div class="card shadow rounded-4 border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-truck fa-2x text-danger mb-3"></i>
+                    <h5 class="card-title">Pending Orders</h5>
+                    <p class="card-text fs-4 fw-bold">7</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        
+    </div>
 </div>
 
 @endsection

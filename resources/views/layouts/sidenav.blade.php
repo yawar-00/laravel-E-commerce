@@ -163,8 +163,8 @@
     </a>
   </li>
   <li>
-    <a href="#" class="{{ request()->routeIs('orders') ? 'active' : '' }}">
-      <i class="fas fa-shopping-cart"></i><span>Orders</span>
+    <a href="{{ route('users') }}" class="{{ request()->routeIs('users') ? 'active' : '' }}">
+      <i class="fas fa-shopping-cart"></i><span>users</span>
     </a>
   </li>
   <li>

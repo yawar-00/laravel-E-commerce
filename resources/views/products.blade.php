@@ -82,8 +82,8 @@
                         <label>Category:</label>
                         <select name="category" class="form-control" required>
                             <option value="">-- Select Category --</option>
-                            <option value="2">Electronics</option>
-                            <option value="1">Cosmetics</option>
+                            <option value="1">Electronics</option>
+                            <option value="2">Cosmetics</option>
                         </select>
                         <span class="text-danger error-text category_error"></span>
                     </div>
@@ -126,8 +126,8 @@
                         <label>Category:</label>
                         <select name="category" class="form-control" id="editProductCategory" required>
                             <option value="">-- Select Category --</option>
-                            <option value="2">Electronics</option>
-                            <option value="1">Cosmetics</option>
+                            <option value="1">Electronics</option>
+                            <option value="">Cosmetics</option>
                         </select>
                         <span class="text-danger error-text category_error"></span>
                     </div>

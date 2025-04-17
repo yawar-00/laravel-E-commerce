@@ -19,10 +19,10 @@
         </div>
         <div style="width:100vw">
             @include('layouts.adminNav')
-           <div style="padding:20px">
+           <div style="padding:20px ;heigth:100% ">
                 @yield('content')
            </div>
-            @include('layouts.footer')
+
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
