@@ -1,3 +1,5 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @extends('layouts.master')
 @section('content')
 <div class="py-12">
@@ -16,6 +18,7 @@
                     <th>id</th>
                     <th>Name</th>
                     <th>Description</th>
+                    <th>Category</th>
                     <th>Image</th>
                     <th>Actions</th>
                 </tr>
@@ -26,6 +29,7 @@
                     <td>{{ $product->id }}</td>
                     <td>{{ $product->name }}</td>
                     <td>{{ $product->description }}</td>
+                    <td>{{ $product->category->category_name}}</td>
                     <td>
                         @if($product->image)
                         <img src="{{ asset($product->image) }}" style="width: 120px; height: 60px; cursor:pointer;"
@@ -75,6 +79,15 @@
                         <span class="text-danger error-text description_error"></span>
                     </div>
                     <div class="form-group mb-3">
+                        <label>Category:</label>
+                        <select name="category" class="form-control" required>
+                            <option value="">-- Select Category --</option>
+                            <option value="2">Electronics</option>
+                            <option value="1">Cosmetics</option>
+                        </select>
+                        <span class="text-danger error-text category_error"></span>
+                    </div>
+                    <div class="form-group mb-3">
                         <label>Image:</label>
                         <input type="file" name="image" class="form-control" accept="image/*" required />
                         <span class="text-danger error-text image_error"></span>
@@ -109,6 +122,16 @@
                             required></textarea>
                         <span class="text-danger error-text description_error"></span>
                     </div>
+                    <div class="form-group mb-3">
+                        <label>Category:</label>
+                        <select name="category" class="form-control" id="editProductCategory" required>
+                            <option value="">-- Select Category --</option>
+                            <option value="2">Electronics</option>
+                            <option value="1">Cosmetics</option>
+                        </select>
+                        <span class="text-danger error-text category_error"></span>
+                    </div>
+
                     <div class="form-group mb-3">
                         <label>Image:</label>
 
@@ -160,50 +183,67 @@
         
         // Add Product AJAX
         $('#productForm').submit(function(e) {
-            e.preventDefault();
-            let formData = new FormData(this);
-            // Clear old errors
-            $('.error-text').text('');
-    
-            $.ajax({
-                url: "{{ route('product.store') }}",
-                type: "POST",
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                success: function(response) {
-                    $('#message').html(`<div class="alert alert-success">${response.success}</div>`);
-                    $('#productForm')[0].reset();
-                    $('#addProductModal').modal('hide');
-                   
+    e.preventDefault();
+    let formData = new FormData(this);
+    $('.error-text').text('');
 
-                    let newRow = `<tr id="product_${response.product.id}">
-                        <td>${response.product.index}</td>
-                        <td>${response.product.name}</td>
-                        <td>${response.product.description}</td>
-                        <td><img heigh=60px width=120px src="${response.product.image}" class="product-img" alt="Image"></td>
-                        <td><button class="btn btn-warning btn-sm editProductBtn" data-id="${response.product.id}">Edit</button>
-                        <button class="btn btn-danger btn-sm deleteProductBtn" data-id="${response.product.id}">Delete</button></td>
-                    </tr>`;
-                    $('#productTable').append(newRow);
-                    // $('#productTable').prepend(newRow);
-                    // $('body').removeClass('modal-open');
-                    // $('.modal-backdrop').remove();
-                    $('#addProductModal').modal('hide');
-                },
-                error: function(xhr) {
-                    if (xhr.status === 422) {
-                        let errors = xhr.responseJSON.errors;
-                        $.each(errors, function(field, messages) {
-                            $(`.error-text.${field}_error`).text(messages[0]);
-                        });
-                    } else {
-                        $('#message').html(`<div class="alert alert-danger">Something went wrong.</div>`);
-                    }
-                }
+    $.ajax({
+        url: "{{ route('product.store') }}",
+        type: "POST",
+        data: formData,
+        contentType: false,
+        processData: false,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: response.success,
+                timer: 2000,
+                showConfirmButton: false
             });
+            $('#addProductModal').modal('hide');
+
+    // Wait for modal to fully hide, then clean up body styles
+        $('#addProductModal').on('hidden.bs.modal', function () {
+            $('body').removeClass('modal-open');
+            $('body').css('overflow', 'auto');
+            $('body').css('padding-right', '');
+            $('.modal-backdrop').remove();
         });
+            let newRow = `<tr id="product_${response.product.id}">
+                <td>${response.product.id}</td>
+                <td>${response.product.name}</td>
+                <td>${response.product.description}</td>
+                <td>${response.product.category}</td>
+                <td><img height="60px" width="120px" src="${response.product.image}" class="product-img" alt="Image"></td>
+                <td>
+                    <button class="btn btn-warning btn-sm editProductBtn" data-id="${response.product.id}">Edit</button>
+                    <button class="btn btn-danger btn-sm deleteProductBtn" data-id="${response.product.id}">Delete</button>
+                </td>
+            </tr>`;
+            $('#productTable').append(newRow);
+        },
+        error: function(xhr) {
+            if (xhr.status === 422) {
+                let errors = xhr.responseJSON.errors;
+                $.each(errors, function(field, messages) {
+                    $(`.error-text.${field}_error`).text(messages[0]);
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops!',
+                    text: 'Something went wrong.',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            }
+        }
+    });
+});
     
         // Edit Product AJAX - Load Product Data into Modal
         $(document).on('click', '.editProductBtn', function() {
@@ -216,54 +256,72 @@
                     $('#editProductId').val(response.product.id);
                     $('#editProductName').val(response.product.name);
                     $('#editProductDescription').val(response.product.description);
+                    $('#editProductCategory').val(response.product.category_id);
                     // Set the image preview
                     if (response.product.image) {
                         $('#edit-preview-image').attr('src', response.product.image).show();
                     } else {
                         $('#edit-preview-image').hide();
                     }
-            
                     $('#editProductModal').modal('show');
                 }
             });
         });
     
         // Update Product AJAX
-        $('#editProductForm').submit(function(e) {
-            e.preventDefault();
-            let productId = $('#editProductId').val();
-            let formData = new FormData(this);
-    
-            $.ajax({
-                url: `/products/${productId}/update`,
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                success: function(response) {
-                    $('#message').html(`<div class="alert alert-success">${response.success}</div>`);
-                    $('#editProductForm')[0].reset();
-                    $('#editProductModal').modal('hide');
-                    $('body').removeClass('modal-open');
-                    $('.modal-backdrop').remove();
+        $('#editProductForm').on('submit', function(e) {
+        e.preventDefault();
 
-                    $(`#product_${response.product.id} td:nth-child(2)`).text(response.product.name);
-                    $(`#product_${response.product.id} td:nth-child(3)`).text(response.product.description);
-                    $(`#product_${response.product.id} td:nth-child(4) img`).attr('src', response.product.image);
-                },
-                error: function(xhr) {
-                    if (xhr.status === 422) {
-                        let errors = xhr.responseJSON.errors;
-                        $.each(errors, function(field, messages) {
-                            $(`.error-text.${field}_error`).text(messages[0]);
-                        });
-                    } else {
-                        $('#message').html(`<div class="alert alert-danger">Something went wrong.</div>`);
-                    }
+        let productId = $('#editProductId').val();
+        let formData = new FormData(this);
+
+        $.ajax({
+            url: `/products/${productId}/update`,
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: response.success
+                });
+
+                $('#editProductForm')[0].reset();
+                $('#editProductModal').modal('hide');
+
+                // Optional safety: re-enable modal usability
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+
+                // Update table data dynamically
+                let row = $(`#product_${response.product.id}`);
+                row.find('td:nth-child(2)').text(response.product.name);
+                row.find('td:nth-child(3)').text(response.product.description);
+                row.find('td:nth-child(4)').text(response.product.category);
+                row.find('td:nth-child(5) img').attr('src', response.product.image);
+            },
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+                    $.each(errors, function(field, messages) {
+                        $(`.error-text.${field}_error`).text(messages[0]);
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong while updating the product.'
+                    });
                 }
-            });
+            }
         });
+    });
+
     
         // Delete Product AJAX with Event Delegation
         $(document).on('click', '.deleteProductBtn', function(e) {

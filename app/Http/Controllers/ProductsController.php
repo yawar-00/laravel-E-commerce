@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 
+
+use App\Models\category;
+use Illuminate\Http\Request;
 use App\Models\ProductsModel;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
 
 use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
-
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class ProductsController extends Controller
 {
@@ -19,8 +20,8 @@ class ProductsController extends Controller
 
     public function index(Request $request)
     {
-        $products = ProductsModel::get();
-    
+        $products = ProductsModel::with(['category'])->get();
+        // dd($products);
         return view('products', compact('products'));
     }
 
@@ -28,12 +29,13 @@ class ProductsController extends Controller
 
     public function store(Request $request)
     {
+       
         $request->validate([
             'name' => 'required|min:1|max:10',
             'description' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'category' => 'required|exists:categories,id',
         ]);
-    
         if ($request->hasFile('image')) {
             $manager = new ImageManager(new Driver());
     
@@ -44,13 +46,14 @@ class ProductsController extends Controller
             $img->save(public_path('Upload/products/' . $name_gen));
     
             $save_url = 'Upload/products/' . $name_gen;
-    
+           
             $product = ProductsModel::create([
                 'name' => $request->name,
                 'description' => $request->description,
                 'image' => $save_url,
+                'category_id'=>$request->category
             ]);
-    
+            
             return response()->json([
                 'success' => 'Product saved successfully.',
                 'product' => [
@@ -58,6 +61,7 @@ class ProductsController extends Controller
                     'name' => $product->name,
                     'description' => $product->description,
                     'image' => asset($product->image),
+                    'category' =>  category::where('id',$request->category)->value('category_name'),
                 ]
             ]);
         }
@@ -87,17 +91,19 @@ class ProductsController extends Controller
     // Update a product by its ID
     public function update(Request $request, $id)
     {
+        
         $request->validate([
             'name' => 'required|min:1|max:10',
             'description' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'category' => 'required|exists:categories,id',
         ]);
     
         $product = ProductsModel::findOrFail($id);
     
         $product->name = $request->name;
         $product->description = $request->description;
-    
+        $product->category_id = $request->category;
         if ($request->hasFile('image')) {
             $manager = new ImageManager(new Driver());
     
@@ -131,6 +137,7 @@ class ProductsController extends Controller
                 'name' => $product->name,
                 'description' => $product->description,
                 'image' => asset($product->image),
+                'category' =>  category::where('id',$request->category)->value('category_name'),
             ]
         ]);
     }
