@@ -14,4 +14,5 @@ class adminController extends Controller
         $categoriescount=ProductsModel::with('category')->get()->count();
         return view('adminDashboard',compact('productscount','userscount','categoriescount'));
     } 
+    
 }

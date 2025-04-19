@@ -163,8 +163,8 @@
     </a>
   </li>
   <li>
-    <a href="{{ route('users') }}" class="{{ request()->routeIs('users') ? 'active' : '' }}">
-      <i class="fas fa-shopping-cart"></i><span>users</span>
+    <a href="{{ route('bannerControl') }}" class="{{ request()->routeIs('bannerControl') ? 'active' : '' }}">
+      <i class="fas fa-shopping-cart"></i><span>Banner Control</span>
     </a>
   </li>
   <li>

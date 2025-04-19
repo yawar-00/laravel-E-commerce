@@ -1,50 +1,87 @@
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @extends('layouts.master')
 @section('content')
+<!-- DataTables core CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
+
+<!-- DataTables Buttons Extension CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.2/css/buttons.dataTables.css">
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+<!-- DataTables core -->
+<script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+
+<!-- DataTables Buttons Extension -->
+<script src="https://cdn.datatables.net/buttons/3.2.2/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.2/js/buttons.dataTables.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.2/js/buttons.print.min.js"></script>
+
+<!-- JSZip for Excel export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<!-- pdfmake for PDF export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.8.4/axios.min.js" integrity="sha512-2A1+/TAny5loNGk3RBbk11FwoKXYOMfAK6R7r4CpQH7Luz4pezqEGcfphoNzB7SM4dixUoJsKkBsB6kg+dNE2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addProductModal">
-                 Add Product
+                <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addHeroModal">
+                 Add Banner
                 </button>
 
         <div id="message"></div>
 
-        <table class="table table-dark table-bordered">
+        <table id="bannerTable" class="table table-dark table-bordered display nowrap">
             <thead>
                 <tr>
                     <th>id</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Category</th>
                     <th>Image</th>
+                    <th>Description</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody id="productTable">
-                @forelse($products as $index => $product)
-                <tr id="product_{{ $product->id }}">
-                    <td>{{ $product->id }}</td>
-                    <td>{{ $product->name }}</td>
-                    <td>{{ $product->description }}</td>
-                    <td>{{ $product->category->category_name}}</td>
+            <tbody id="bannerTable">
+                @forelse($banners as $index => $banner)
+                <tr id="banner_{{ $banner->id }}">
+                    <td>{{ $banner->id }}</td>
                     <td>
-                        @if($product->image)
-                        <img src="{{ asset($product->image) }}" style="width: 120px; height: 60px; cursor:pointer;"
-                            class="product-img" alt="Image">
+                        @if($banner->url)
+                        <img src="{{ asset($banner->url) }}" style="width: 120px; height: 60px; cursor:pointer;"
+                            class="banner-img" alt="Image">
                         @else
                         No Image
                         @endif
                     </td>
+                    
+                    <td>{{ $banner->description }}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm editProductBtn" data-id="{{ $product->id }}"
+                    <div class="form-check form-switch">
+    <input
+      class="form-check-input toggleStatus"
+      type="checkbox"
+      role="switch"
+      data-id="{{ $banner->id }}"
+      {{ $banner->status ? 'checked' : '' }}>
+    </div>
+                </td>
+                    
+           
+                    <td>
+                        <button class="btn btn-warning btn-sm editProductBtn" data-id="{{ $banner->id }}"
                             data-bs-toggle="modal" data-bs-target="#editProductModal">
                             Edit
                         </button>
 
-                        <button class="btn btn-danger btn-sm deleteProductBtn" data-id="{{ $product->id }}">
+                        <button class="btn btn-danger btn-sm deleteBannerBtn" data-id="{{ $banner->id }}">
                             <i class="fas fa-trash-alt"></i> Delete
                         </button>
                     </td>
@@ -59,40 +96,27 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel"
+        <div class="modal fade" id="addHeroModal" tabindex="-1" aria-labelledby="addHeroModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
-            <form id="productForm" enctype="multipart/form-data" class="modal-content">
+            <form id="HeroForm" enctype="multipart/form-data" class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+                    <h5 class="modal-title" id="addHeroModalLabel">Add New Banner</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    
                     <div class="form-group mb-3">
-                        <label>Name:</label>
-                        <input type="text" name="name" class="form-control" required />
-                        <span class="text-danger error-text name_error"></span>
-                    </div>
-                    <div class="form-group mb-3">
+                        <div class="form-group mb-3">
+                            <label>Image:</label>
+                            <input type="file" name="image" class="form-control" accept="image/*" required />
+                            <span class="text-danger error-text image_error"></span>
+                        </div>
                         <label>Description:</label>
                         <textarea name="description" class="form-control" required></textarea>
                         <span class="text-danger error-text description_error"></span>
                     </div>
-                    <div class="form-group mb-3">
-                        <label>Category:</label>
-                        <select name="category" class="form-control" required>
-                            <option value="">-- Select Category --</option>
-                            <option value="1">Electronics</option>
-                            <option value="2">Cosmetics</option>
-                        </select>
-                        <span class="text-danger error-text category_error"></span>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label>Image:</label>
-                        <input type="file" name="image" class="form-control" accept="image/*" required />
-                        <span class="text-danger error-text image_error"></span>
-                    </div>
-                </div>
+                    
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">Save Product</button>
                 </div>
@@ -173,22 +197,29 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
+<script>
+    new DataTable('#bannerTable', {
+    layout: {
+        topStart: {
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+        }
+    }
+});
         // Show image in modal
-        $(document).on('click', '.product-img', function() {
-             const imageUrl = $(this).attr('src');
-             $('#previewImage').attr('src', imageUrl);
-             $('#imagePreviewModal').modal('show');
-        });
+$(document).on('click', '.product-img', function() {
+    const imageUrl = $(this).attr('src');
+    $('#previewImage').attr('src', imageUrl);
+    $('#imagePreviewModal').modal('show');
+});
         
         // Add Product AJAX
-        $('#productForm').submit(function(e) {
+$('#HeroForm').submit(function(e) {
     e.preventDefault();
     let formData = new FormData(this);
     $('.error-text').text('');
 
     $.ajax({
-        url: "{{ route('product.store') }}",
+        url: "{{ route('banner.store') }}",
         type: "POST",
         data: formData,
         contentType: false,
@@ -204,27 +235,37 @@
                 timer: 2000,
                 showConfirmButton: false
             });
-            $('#addProductModal').modal('hide');
+            $('#addHeroModal').modal('hide');
 
     // Wait for modal to fully hide, then clean up body styles
-        $('#addProductModal').on('hidden.bs.modal', function () {
+        $('#addHeroModal').on('hidden.bs.modal', function () {
             $('body').removeClass('modal-open');
             $('body').css('overflow', 'auto');
             $('body').css('padding-right', '');
             $('.modal-backdrop').remove();
+            
         });
-            let newRow = `<tr id="product_${response.product.id}">
-                <td>${response.product.id}</td>
-                <td>${response.product.name}</td>
-                <td>${response.product.description}</td>
-                <td>${response.product.category}</td>
-                <td><img height="60px" width="120px" src="${response.product.image}" class="product-img" alt="Image"></td>
-                <td>
-                    <button class="btn btn-warning btn-sm editProductBtn" data-id="${response.product.id}">Edit</button>
-                    <button class="btn btn-danger btn-sm deleteProductBtn" data-id="${response.product.id}">Delete</button>
-                </td>
+        let newRow = `<tr id="banner_${response.banner.id}">                 
+                <td>${response.banner.id}</td>                 
+                <td><img height="60px" width="120px" src="${response.banner.image}" class="banner-img" alt="Image"></td>                 
+                <td>${response.banner.description}</td>                 
+                <td> 
+                     <div class="form-check form-switch">
+    <input
+      class="form-check-input toggleStatus"
+      type="checkbox"
+      role="switch"
+      data-id="${response.banner.id }"
+      ${response.bannerstatus ? 'checked' : ''}>
+    </div>
+                </td>                 
+                <td>                     
+                    <button class="btn btn-warning btn-sm editProductBtn" data-id="${response.banner.id}">Edit</button>                     
+                    <button class="btn btn-danger btn-sm deleteBannerBtn" data-id="${response.banner.id}">Delete</button>                 
+                </td>             
             </tr>`;
-            $('#productTable').prepend(newRow);
+
+            $('#bannerTable').prepend(newRow);
         },
         error: function(xhr) {
             if (xhr.status === 422) {
@@ -276,6 +317,7 @@
         let formData = new FormData(this);
 
         $.ajax({
+          
             url: `/products/${productId}/update`,
             type: 'POST',
             data: formData,
@@ -320,17 +362,40 @@
                 }
             }
         });
-    });
+         });
 
-    
+       // toggle 
+$(document).on('change', '.toggleStatus', function () {
+    const bannerId = $(this).data('id');
+    const newStatus = $(this).is(':checked') ? 1 : 0;
+
+    axios.post(`/banners/makeActive/${bannerId}`, {
+        status: newStatus
+    }, {
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => {
+        Swal.fire('Success', response.data.message, 'success');
+
+        // Reset all toggle buttons except the clicked one
+        $('.toggleStatus').not(this).prop('checked', false);
+    })
+    .catch(error => {
+        console.error(error);
+        Swal.fire('Error', 'Could not update status.', 'error');
+    });
+});
+       
         // Delete Product AJAX with Event Delegation
-        $(document).on('click', '.deleteProductBtn', function(e) {
+        $(document).on('click', '.deleteBannerBtn', function(e) {
             e.preventDefault();
-            const productId = $(this).data('id');
+            const bannerId = $(this).data('id');
             
             Swal.fire({
                 title: 'Are you sure?',
-                text: 'This will delete the product permanently!',
+                text: 'This will delete the Banner permanently!',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -338,18 +403,18 @@
                 confirmButtonText: 'Yes, delete it!',
             }).then(result => {
                 if (result.isConfirmed) {
-                    axios.delete(`/products/delete/${productId}`, {
+                    axios.delete(`/banners/deletes/${bannerId}`, {
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         }
                     })
                     .then(response => {
                         Swal.fire('Deleted!', response.data.success, 'success');
-                        $(`#product_${productId}`).remove();
+                        $(`#banner_${bannerId}`).remove();
                     })
                     .catch(error => {
                         console.error(error);
-                        Swal.fire('Error!', 'There was a problem deleting the product.', 'error');
+                        Swal.fire('Error!', 'There was a problem deleting the Banner.', 'error');
                     });
                 }
             });
