@@ -164,7 +164,7 @@
   </li>
   <li>
     <a href="{{ route('bannerControl') }}" class="{{ request()->routeIs('bannerControl') ? 'active' : '' }}">
-      <i class="fas fa-shopping-cart"></i><span>Banner Control</span>
+    <i class="fa-regular fa-calendar-check"></i><span>Banner Control</span>
     </a>
   </li>
   <li>

@@ -1,6 +1,7 @@
 
 @extends('layouts.master')
 @section('content')
+
 <!-- DataTables core CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
 

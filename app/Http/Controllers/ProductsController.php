@@ -35,6 +35,7 @@ class ProductsController extends Controller
             'description' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'category' => 'required|exists:categories,id',
+            'price' => 'required|decimal:2',
         ]);
         if ($request->hasFile('image')) {
             $manager = new ImageManager(new Driver());
@@ -51,7 +52,8 @@ class ProductsController extends Controller
                 'name' => $request->name,
                 'description' => $request->description,
                 'image' => $save_url,
-                'category_id'=>$request->category
+                'category_id'=>$request->category,
+                'price'=>$request->price,
             ]);
             
             return response()->json([
@@ -62,6 +64,7 @@ class ProductsController extends Controller
                     'description' => $product->description,
                     'image' => asset($product->image),
                     'category' =>  category::where('id',$request->category)->value('category_name'),
+                    'price'=>$product->price,
                 ]
             ]);
         }
@@ -83,7 +86,6 @@ class ProductsController extends Controller
         if ($product->image) {
             $product->image = asset($product->image);
         }
-    
         return response()->json([
             'product' => $product
         ]);
@@ -97,6 +99,7 @@ class ProductsController extends Controller
             'description' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'category' => 'required|exists:categories,id',
+            'price' => 'required|decimal:2',
         ]);
     
         $product = ProductsModel::findOrFail($id);
@@ -104,6 +107,7 @@ class ProductsController extends Controller
         $product->name = $request->name;
         $product->description = $request->description;
         $product->category_id = $request->category;
+        $product->price=$request->price;
         if ($request->hasFile('image')) {
             $manager = new ImageManager(new Driver());
     
@@ -138,11 +142,11 @@ class ProductsController extends Controller
                 'description' => $product->description,
                 'image' => asset($product->image),
                 'category' =>  category::where('id',$request->category)->value('category_name'),
+                'price'=>$product->price,
             ]
         ]);
     }
     
-
 
     // Delete a product by its ID
     public function delete($id)

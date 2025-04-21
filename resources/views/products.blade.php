@@ -17,9 +17,10 @@
                 <tr>
                     <th>id</th>
                     <th>Name</th>
-                    <th>Description</th>
-                    <th>Category</th>
                     <th>Image</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Description</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -28,8 +29,6 @@
                 <tr id="product_{{ $product->id }}">
                     <td>{{ $product->id }}</td>
                     <td>{{ $product->name }}</td>
-                    <td>{{ $product->description }}</td>
-                    <td>{{ $product->category->category_name}}</td>
                     <td>
                         @if($product->image)
                         <img src="{{ asset($product->image) }}" style="width: 120px; height: 60px; cursor:pointer;"
@@ -38,6 +37,9 @@
                         No Image
                         @endif
                     </td>
+                    <td>{{ $product->category->category_name}}</td>
+                    <td>{{ $product->price }}</td>
+                    <td>{{ $product->description }}</td>
                     <td>
                         <button class="btn btn-warning btn-sm editProductBtn" data-id="{{ $product->id }}"
                             data-bs-toggle="modal" data-bs-target="#editProductModal">
@@ -84,8 +86,16 @@
                             <option value="">-- Select Category --</option>
                             <option value="1">Electronics</option>
                             <option value="2">Cosmetics</option>
+                            <option value="3">Home Decor</option>
+                            <option value="4">Kitchen Item</option>
+                            <option value="5">Grocery</option>
                         </select>
                         <span class="text-danger error-text category_error"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Price:</label>
+                        <input name="price" class="form-control" required />
+                        <span class="text-danger error-text price_error"></span>
                     </div>
                     <div class="form-group mb-3">
                         <label>Image:</label>
@@ -127,9 +137,17 @@
                         <select name="category" class="form-control" id="editProductCategory" required>
                             <option value="">-- Select Category --</option>
                             <option value="1">Electronics</option>
-                            <option value="">Cosmetics</option>
+                            <option value="2">Cosmetics</option>
+                            <option value="3">Home Decor</option>
+                            <option value="4">Kitchen Item</option>
+                            <option value="5">Grocery</option>
                         </select>
                         <span class="text-danger error-text category_error"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Price:</label>
+                        <input name="price" class="form-control" required id="editProductPrice"/>
+                        <span class="text-danger error-text price_error"></span>
                     </div>
 
                     <div class="form-group mb-3">
@@ -216,9 +234,10 @@
             let newRow = `<tr id="product_${response.product.id}">
                 <td>${response.product.id}</td>
                 <td>${response.product.name}</td>
-                <td>${response.product.description}</td>
-                <td>${response.product.category}</td>
                 <td><img height="60px" width="120px" src="${response.product.image}" class="product-img" alt="Image"></td>
+                <td>${response.product.category}</td>
+                <td>${response.product.price}</td>
+                <td>${response.product.description}</td>
                 <td>
                     <button class="btn btn-warning btn-sm editProductBtn" data-id="${response.product.id}">Edit</button>
                     <button class="btn btn-danger btn-sm deleteProductBtn" data-id="${response.product.id}">Delete</button>
@@ -248,15 +267,18 @@
         // Edit Product AJAX - Load Product Data into Modal
         $(document).on('click', '.editProductBtn', function() {
             let productId = $(this).data('id');
+            // console.log(url);
             
             $.ajax({
-                url: `/products/${productId}/edit`,
+                url: `products/${productId}/edit`,
                 type: 'GET',
+                
                 success: function(response) {
                     $('#editProductId').val(response.product.id);
                     $('#editProductName').val(response.product.name);
                     $('#editProductDescription').val(response.product.description);
                     $('#editProductCategory').val(response.product.category_id);
+                    $('#editProductPrice').val(response.product.price);
                     // Set the image preview
                     if (response.product.image) {
                         $('#edit-preview-image').attr('src', response.product.image).show();
@@ -276,7 +298,7 @@
         let formData = new FormData(this);
 
         $.ajax({
-            url: `/products/${productId}/update`,
+            url: `products/${productId}/update`,
             type: 'POST',
             data: formData,
             contentType: false,
@@ -301,9 +323,10 @@
                 // Update table data dynamically
                 let row = $(`#product_${response.product.id}`);
                 row.find('td:nth-child(2)').text(response.product.name);
-                row.find('td:nth-child(3)').text(response.product.description);
+                row.find('td:nth-child(3) img').attr('src', response.product.image);
                 row.find('td:nth-child(4)').text(response.product.category);
-                row.find('td:nth-child(5) img').attr('src', response.product.image);
+                row.find('td:nth-child(5)').text(response.product.price);
+                row.find('td:nth-child(6)').text(response.product.description);
             },
             error: function(xhr) {
                 if (xhr.status === 422) {

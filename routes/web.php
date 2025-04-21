@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Banner;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\adminController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\Users1Controller;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\ProductsController;
 
 /*
@@ -20,8 +22,10 @@ use App\Http\Controllers\ProductsController;
 |
 */
 // preventBack
-Route::middleware('preventBack')->get('/', function () {
-    return view('welcome');
+Route::middleware('preventBack')->group( function () {
+        Route::get('/',[FrontendController::class,'index'])->name('Home');
+        Route::get('/shop',[FrontendController::class,'shop'])->name('Shop');
+        Route::get('/shopByCategory',[FrontendController::class,'shopByCategory']);
 });
 
 Route::get('/user',[Users1Controller::class,'create']);
@@ -31,15 +35,15 @@ Route::middleware('preventBack')->group(function(){
     Route::prefix('/dashboard')->group(function(){
         Route::get('/', [adminController::class, 'index'] )->middleware(['auth', 'verified'])->name('AdminDashboard');
         // Route::get('/dashboard', [ProductsController::class, 'index'] )->middleware(['auth', 'verified'])->name('dashboard');
-        Route::get('/products', [ProductsController::class, 'index'] )->middleware(['auth', 'verified'])->name('products');
+        Route::get('/products', [ProductsController::class, 'index'] )->name('products');
         Route::prefix('products')->group(function(){
-            Route::post('/save-item', [ProductsController::class, 'store'])->name('product.store');
             Route::get('/{id}/edit', [ProductsController::class, 'edit']);
+            Route::post('/save-item', [ProductsController::class, 'store'])->name('product.store');
             Route::post('/{id}/update', [ProductsController::class, 'update'])->name('product.update');
             Route::delete('/delete/{id}', [ProductsController::class, 'delete'])->name('product.delete');
         });
 
-        Route::get('/banners',[BannerController::class,'index'])->middleware(['auth', 'verified'])->name('bannerControl');
+        Route::get('/banners',[BannerController::class,'index'])->name('bannerControl');
        
     });
 });
