@@ -10,19 +10,59 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            overflow-y:hidden;
+        }
+
+        .header {
+            height: 60px;
+            background-color: #2c3e50;
+            color: white;
+            /* display: flex; */
+            align-items: center;
+            /* padding: 0 20px; */
+        }
+
+        .layout {
+            display: flex;
+            height: calc(100vh - 60px); /* Remaining height after header */
+        }
+
+        aside {
+            width: 250px;
+            background-color: #34495e;
+            color: white;
+    
+        }
+
+        .content {
+            flex: 1;
+            height: calc(100vh - 60px); /* Remaining height after header */
+            overflow-y: auto;
+            background-color:#edefca;
+        }
+        </style>
 </head>
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 <body style="background-color:#4F959D">
-    <div style="display:flex">
-        <div style="width:295px">
+    <div class="header">
+       @include('layouts.adminNav')
+    </header>
+    <div class="layout">
+        <aside>
             @include('layouts.sidenav')
-        </div>
-        <div style="width:100vw">
-            @include('layouts.adminNav')
-           <div style="padding:20px ;heigth:100% ">
-                @yield('content')
-           </div>
-
+        </aside>
+        <div class="content">
+            @yield('content')
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

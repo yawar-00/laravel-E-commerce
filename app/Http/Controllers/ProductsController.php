@@ -31,7 +31,7 @@ class ProductsController extends Controller
     {
        
         $request->validate([
-            'name' => 'required|min:1|max:10',
+            'name' => 'required|min:1',
             'description' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'category' => 'required|exists:categories,id',
@@ -95,7 +95,7 @@ class ProductsController extends Controller
     {
         
         $request->validate([
-            'name' => 'required|min:1|max:10',
+            'name' => 'required|min:1',
             'description' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'category' => 'required|exists:categories,id',

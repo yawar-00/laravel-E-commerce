@@ -112,7 +112,7 @@
         <h5 class="card-title">{{$product->name}}</h5>
         <h4 class="card-price">₹{{$product->price}}</h4>
         <p class="card-text">{{$product->description}}</p>
-        <a href="#" class="btn" id="btn-shop">Shop now</a>
+        <a href="/shopProduct/{{$product->id}}" class="btn" id="btn-shop">Shop now</a>
     </div>
 </div>
 @endforeach

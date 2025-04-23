@@ -1,7 +1,16 @@
 
 @extends('layouts.master')
 @section('content')
-
+<style>
+    .addBanner{
+        background-color:#00b894;
+        color:#ffffff
+        
+    }
+    .addBanner:hover{
+        background-color:#016954;
+    }
+</style>
 <!-- DataTables core CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
 
@@ -32,15 +41,15 @@
 
 <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="overflow-hidden shadow-sm sm:rounded-lg" style="background-color:#bfc7a4">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addHeroModal">
+                <button type="button" class="btn addBanner mb-4" data-bs-toggle="modal" data-bs-target="#addHeroModal">
                  Add Banner
                 </button>
 
         <div id="message"></div>
 
-        <table id="bannerTable" class="table table-dark table-bordered display nowrap">
+        <table id="bannerTable" class="table  table-bordered display nowrap">
             <thead>
                 <tr>
                     <th>id</th>
@@ -126,7 +135,7 @@
     </div>
 
     <!-- Edit Product Modal -->
-    <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel"
+    <div class="modal fade" id="editBannerModal" tabindex="-1" aria-labelledby="editProductModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <form id="editProductForm" enctype="multipart/form-data" class="modal-content">

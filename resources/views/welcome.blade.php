@@ -17,16 +17,19 @@
             
     #hero {
     position: relative;
-    width: 100%;
+    width: 98%;
+    margin:auto;
     max-height: 500px;
     overflow: hidden;
     margin-bottom:50px;
 }
 
 #heroImg {
+    border-radius:5px;
     width: 100%;
     height:500px;  
     display: block;
+    
 }
 
 #heroText {
@@ -35,14 +38,29 @@
     left: 50%;
     transform: translateX(-50%);
     color: #fff;
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: bold;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
     text-align: center;
     padding: 10px 20px;
     background: rgba(0, 0, 0, 0.4); /* Optional semi-transparent background for better readability */
     border-radius: 12px;
+    opacity: 0; /* Start with the text invisible */
+    animation: fadeInScale 2s ease-out forwards infinite; /* Apply the fade-in and scale-up animation */
 }
+
+/* Keyframes for fade-in and scale-up */
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+    }
+}
+
 .card-wrapper {
     display: flex;
     justify-content: center;
@@ -79,7 +97,7 @@
     <body style="background-color:#ECEFCA">
     @extends('layout-frontend.master')
     @section('content')
-        <div style="background-color:#ECEFCA">
+        <div style="background-color:#ECEFCA; margin-top:50px">
             
 
             <div id="hero">
@@ -91,27 +109,30 @@
         <div class="card-wrapper">
             <div class="card-grid">
             @foreach($categories as $category)
+                <a href="/shopByCategory/{{$category->id}}">
                 <div class="card CategoryCard">
-                    
                     <h1 class="CategoryName">{{$category->category_name}}</h1>
                     <div class="image-wrapper">
                     <div class="image-grid">
                     @php
-                        $i = 0;
+                        $i=1; 
                     @endphp
-
-                    @while ($i < 4)
-                    <!-- <p>{{$category->name}} </p> -->
-                    @if($category->category_name == $product[$i]->category->category_name)
-                            <img src="{{ asset($product[$i]->image) }}" alt="">
+                    @foreach($products as $product)
+                    @if($category->id == $product->category_id &&$i<5)
+                        <img src="{{ asset($product ->image) }}" alt="">
+                            @php
+                            $i++; 
+                            @endphp
                         @endif
-                        @php $i++; @endphp
                         
-                    @endwhile
+                       
+                        
+                    @endforeach
                         
                     </div>
                     </div>
                 </div>
+                </a>
             @endforeach
 
             </div>
@@ -121,15 +142,6 @@
 
         </div>
     @endsection
-    <script>
-        $(document).on('click', '.CategoryCard', function() {
-            let Category =  $('.CategoryName').text();
-            console.log(Category);
-        //    $.ajax({
-        //         url: ``,
-        //         type: 'GET',    
-        //     }); 
-        });
-    </script>
+    
     </body>
 </html>

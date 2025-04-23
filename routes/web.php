@@ -7,9 +7,11 @@ use App\Http\Controllers\adminController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\Users1Controller;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\AboutUsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,8 +27,25 @@ use App\Http\Controllers\ProductsController;
 Route::middleware('preventBack')->group( function () {
         Route::get('/',[FrontendController::class,'index'])->name('Home');
         Route::get('/shop',[FrontendController::class,'shop'])->name('Shop');
-        Route::get('/shopByCategory',[FrontendController::class,'shopByCategory']);
+        Route::get('/shopByCategory/{id}',[FrontendController::class,'shopByCategory']);
+        Route::get('/shopProduct/{id}',[FrontendController::class,'shopProduct']);
+        Route::get('/about-us', [AboutUsController::class, 'index'])->name('AboutUs');
+        Route::get('/buynow/{id}',[FrontendController::class,'BuyNow'])->middleware(['auth', 'verified']);
+        Route::post('/razorpay',[PaymentController::class,'payment'])->middleware(['auth', 'verified'])->name('payment');
+
+
 });
+
+Route::middleware('preventBack')->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::get('/about-us', [AboutUsController::class, 'list'])->name('admin.about.list');
+        Route::get('/about-us/{id}', [AboutUsController::class, 'getOne']);
+        Route::post('/about-us/store', [AboutUsController::class, 'store'])->name('admin.about.store');
+        Route::delete('/about-us/{id}', [AboutUsController::class, 'destroy']);
+        Route::post('/about-us/toggle-status/{id}', [AboutUsController::class, 'toggleStatus']);
+    });
+});
+
 
 Route::get('/user',[Users1Controller::class,'create']);
 Route::get('/post',[PostController::class,'create']);

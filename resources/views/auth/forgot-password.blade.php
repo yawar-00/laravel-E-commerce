@@ -280,7 +280,7 @@ a.ssolink {
         <div class="formbg-outer">
           <div class="formbg">
             <div class="formbg-inner padding-horizontal--48">
-              <form id="stripe-login" method="POST" action="{{ route('login') }}">
+              <form id="stripe-login" method="POST" action="{{ route('password.request') }}">
                  @csrf
                 <div class="field padding-bottom--24">
                

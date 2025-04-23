@@ -12,7 +12,7 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 @vite(['resources/css/app.css', 'resources/js/app.js'])
-<body style="background-color:#4F959D">
+<body style="background-color:#edefca">
        
             @include('layout-frontend.header')
         

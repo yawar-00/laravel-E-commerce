@@ -7,10 +7,9 @@
 
 
 .sidebar {
-  position: fixed;
   width: 250px;
   height: 100vh;
-  background-color:#202938;
+  background-color:#bfc7a4;
   color: #fff;
   transition: all 0.3s ease;
   overflow: hidden;
@@ -21,20 +20,9 @@
   width: 70px;
 }
 
-.sidebar .logo {
-  text-align: center;
-  padding: 20px 0;
-}
 
-.sidebar .logo h2 {
-  font-size: 22px;
-  color: #00cec9;
-  transition: 0.3s;
-}
 
-.sidebar.collapsed .logo h2 {
-  display: none;
-}
+
 
 .nav-links {
   list-style: none;
@@ -147,10 +135,7 @@
 }
 
 </style>
-<div class="sidebar" id="sidebar">
-    <div class="logo">
-      <h2>AdminPanel</h2>
-    </div>
+<div class="sidebar" id="sidebar">  
     <ul class="nav-links">
   <li>
     <a href="{{ route('AdminDashboard') }}" class="{{ request()->routeIs('AdminDashboard') ? 'active' : '' }}">
@@ -168,14 +153,17 @@
     </a>
   </li>
   <li>
-    <a href="#" class="{{ request()->routeIs('settings') ? 'active' : '' }}">
-      <i class="fas fa-cogs"></i><span>Settings</span>
+    <a href="{{route('admin.about.list')}}" class="{{ request()->routeIs('admin.about.list') ? 'active' : '' }}">
+      <i class="fas fa-cogs"></i><span>About Us Control</span>
     </a>
   </li>
   <li>
-    <a href="#" class="{{ request()->routeIs('logout') ? 'active' : '' }}">
+  <form method="POST" action="{{ route('logout') }}" >
+    @csrf
+    <a href="{{route('logout')}}" class="{{ request()->routeIs('logout') ? 'active' : '' }}" onclick="event.preventDefault(); this.closest('form').submit();" class="dropdown">
       <i class="fas fa-sign-out-alt"></i><span>Logout</span>
     </a>
+  </form>  
   </li>
 </ul>
 
