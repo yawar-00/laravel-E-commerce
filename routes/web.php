@@ -3,15 +3,17 @@
 use App\Models\Banner;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\adminController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\Users1Controller;
+use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\ProductsController;
-use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +37,17 @@ Route::middleware('preventBack')->group( function () {
 
 
 });
+Route::resource('permission',PermissionController::class);
+Route::post('permission/store',[PermissionController::class,'store']);
+Route::get('permission/{id}/destroy',[PermissionController::class,'destroy']);
+
+Route::resource('role',RoleController::class);
+Route::post('role/store',[RoleController::class,'store']);
+Route::get('role/{id}/destroy',[RoleController::class,'destroy']);
+Route::get('role/{id}/give-permissions',[RoleController::class,'addPermissionToRole']);
+Route::put('role/{id}/give-permissions',[RoleController::class,'givePermissionToRole']);
+
+
 
 Route::middleware('preventBack')->group(function () {
     Route::prefix('admin')->group(function () {
