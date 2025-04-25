@@ -86,8 +86,8 @@
                     
            
                     <td>
-                        <button class="btn btn-warning btn-sm editProductBtn" data-id="{{ $banner->id }}"
-                            data-bs-toggle="modal" data-bs-target="#editProductModal">
+                        <button class="btn btn-warning btn-sm editBannerBtn" data-id="{{ $banner->id }}"
+                            data-bs-toggle="modal" data-bs-target="#editBannerModal">
                             Edit
                         </button>
 
@@ -135,30 +135,30 @@
     </div>
 
     <!-- Edit Product Modal -->
-    <div class="modal fade" id="editBannerModal" tabindex="-1" aria-labelledby="editProductModalLabel"
+    <div class="modal fade" id="editBannerModal" tabindex="-1" aria-labelledby="editBannerModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <form id="editProductForm" enctype="multipart/form-data" class="modal-content">
                 <input type="hidden" name="product_id" id="editProductId">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+                    <h5 class="modal-title" id="editBannerModalLabel">Edit Product</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group mb-3">
                         <label>Name:</label>
-                        <input type="text" name="name" id="editProductName" class="form-control" required />
+                        <input type="text" name="name" id="editBannerName" class="form-control" required />
                         <span class="text-danger error-text name_error"></span>
                     </div>
                     <div class="form-group mb-3">
                         <label>Description:</label>
-                        <textarea name="description" id="editProductDescription" class="form-control"
+                        <textarea name="description" id="editBannerDescription" class="form-control"
                             required></textarea>
                         <span class="text-danger error-text description_error"></span>
                     </div>
                     <div class="form-group mb-3">
                         <label>Category:</label>
-                        <select name="category" class="form-control" id="editProductCategory" required>
+                        <select name="category" class="form-control" id="editBannerCategory" required>
                             <option value="">-- Select Category --</option>
                             <option value="1">Electronics</option>
                             <option value="">Cosmetics</option>
@@ -270,7 +270,7 @@ $('#HeroForm').submit(function(e) {
     </div>
                 </td>                 
                 <td>                     
-                    <button class="btn btn-warning btn-sm editProductBtn" data-id="${response.banner.id}">Edit</button>                     
+                    <button class="btn btn-warning btn-sm editBannerBtn" data-id="${response.banner.id}">Edit</button>                     
                     <button class="btn btn-danger btn-sm deleteBannerBtn" data-id="${response.banner.id}">Delete</button>                 
                 </td>             
             </tr>`;
@@ -296,39 +296,39 @@ $('#HeroForm').submit(function(e) {
     });
 });
     
-        // Edit Product AJAX - Load Product Data into Modal
-        $(document).on('click', '.editProductBtn', function() {
-            let productId = $(this).data('id');
+        // Edit Banner AJAX - Load Banner Data into Modal
+        $(document).on('click', '.editBannerBtn', function() {
+            let bannerId = $(this).data('id');
             
             $.ajax({
-                url: `/products/${productId}/edit`,
+                url: `banners/${bannerId}/edit`,
                 type: 'GET',
                 success: function(response) {
-                    $('#editProductId').val(response.product.id);
-                    $('#editProductName').val(response.product.name);
-                    $('#editProductDescription').val(response.product.description);
-                    $('#editProductCategory').val(response.product.category_id);
+                    $('#editBannerId').val(response.banner.id);
+                    $('#editBannerName').val(response.banner.name);
+                    $('#editBannerDescription').val(response.banner.description);
+                    $('#editBannerCategory').val(response.banner.category_id);
                     // Set the image preview
-                    if (response.product.image) {
-                        $('#edit-preview-image').attr('src', response.product.image).show();
+                    if (response.banner.image) {
+                        $('#edit-preview-image').attr('src', response.banner.image).show();
                     } else {
                         $('#edit-preview-image').hide();
                     }
-                    $('#editProductModal').modal('show');
+                    $('#editBannerModal').modal('show');
                 }
             });
         });
     
-        // Update Product AJAX
-        $('#editProductForm').on('submit', function(e) {
+        // Update Banner AJAX
+        $('#editBannerForm').on('submit', function(e) {
         e.preventDefault();
 
-        let productId = $('#editProductId').val();
+        let bannerId = $('#editBannerId').val();
         let formData = new FormData(this);
 
         $.ajax({
           
-            url: `/products/${productId}/update`,
+            url: `banner/${bannerId}/update`,
             type: 'POST',
             data: formData,
             contentType: false,
@@ -343,19 +343,19 @@ $('#HeroForm').submit(function(e) {
                     text: response.success
                 });
 
-                $('#editProductForm')[0].reset();
-                $('#editProductModal').modal('hide');
+                $('#editBannerForm')[0].reset();
+                $('#editBannerModal').modal('hide');
 
                 // Optional safety: re-enable modal usability
                 $('body').removeClass('modal-open');
                 $('.modal-backdrop').remove();
 
                 // Update table data dynamically
-                let row = $(`#product_${response.product.id}`);
-                row.find('td:nth-child(2)').text(response.product.name);
-                row.find('td:nth-child(3)').text(response.product.description);
-                row.find('td:nth-child(4)').text(response.product.category);
-                row.find('td:nth-child(5) img').attr('src', response.product.image);
+                let row = $(`#banner_${response.banner.id}`);
+                row.find('td:nth-child(2)').text(response.banner.name);
+                row.find('td:nth-child(3)').text(response.banner.description);
+                row.find('td:nth-child(4)').text(response.banner.category);
+                row.find('td:nth-child(5) img').attr('src', response.banner.image);
             },
             error: function(xhr) {
                 if (xhr.status === 422) {
@@ -413,7 +413,7 @@ $(document).on('change', '.toggleStatus', function () {
                 confirmButtonText: 'Yes, delete it!',
             }).then(result => {
                 if (result.isConfirmed) {
-                    axios.delete(`/banners/deletes/${bannerId}`, {
+                    axios.delete(`banners/delete/${bannerId}`, {
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         }

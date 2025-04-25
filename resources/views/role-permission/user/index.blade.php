@@ -8,8 +8,8 @@
                 @endif
                 <div class="card">
                     <div class="card-header">
-                        <h4>Roles
-                            <a href="{{url('role/create')}}" class="btn btn-primary float-end">Add Role</a>
+                        <h4>Users
+                            <a href="{{url('users/create')}}" class="btn btn-primary float-end">Add User</a>
                         </h4>
                     </div>
                     <div class="card-boady">
@@ -18,23 +18,31 @@
                                 <tr>
                                     <th>id</th>
                                     <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Roles</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($roles  as $role)
+                                @foreach($users  as $user)
                                 <tr >
-                                    <td>{{ $role->id }}</td>
-                                    <td>{{ $role->name }}</td>
+                                    <td>{{ $user->id }}</td>
+                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->email }}</td>
+                                    <td>
+                                        @if(!empty($user->getRoleNames()))
+                                            @foreach ($user->getRoleNames() as $rolename)
+                                            <label class="badge bg-primary mx-1">{{$rolename}}</label>
+                                            @endforeach
+                                        @endif
+                                    </td>
                     <td>
-                    <a href="{{url('role/'.$role->id.'/give-permissions')}}" class="btn btn-warning" >
-                            Add/Edit Role Permission
-                        </a>
-                        <a href="{{url('role/'.$role->id.'/edit')}}" class="btn btn-warning" >
+                   
+                        <a href="{{url('users/'.$user->id.'/edit')}}" class="btn btn-warning" >
                             Edit
                         </a>
 
-                        <a href="{{url('role/'.$role->id.'/destroy')}}" class="btn btn-danger " >
+                        <a href="{{url('users/'.$user->id.'/destroy')}}" class="btn btn-danger " >
                             <i class="fas fa-trash-alt"></i> Delete
                         </a>
                         
@@ -48,5 +56,4 @@
 </div>
 </div>
 </div>
-
 @endsection

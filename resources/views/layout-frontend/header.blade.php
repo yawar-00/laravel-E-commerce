@@ -42,11 +42,16 @@
                         {{ __('About Us') }}
                     </x-nav-link>
                 </div>
+                @auth
+                @if((auth()->user()->hasRole('Super Admin'))||(auth()->user()->hasRole('Admin')))
+
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('AdminDashboard')" :active="request()->routeIs('')">
-                        {{ __('Services') }}
+                        {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+                @endif
+                @endauth
             </div>
 
           <!-- Settings Dropdown -->

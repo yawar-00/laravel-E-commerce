@@ -5,7 +5,6 @@
   box-sizing: border-box;
 }
 
-
 .sidebar {
   width: 250px;
   height: 100vh;
@@ -13,16 +12,19 @@
   color: #fff;
   transition: all 0.3s ease;
   overflow: hidden;
-  z-index: 100;
-}
-
-.sidebar.collapsed {
-  width: 70px;
+  
+  
 }
 
 
-
-
+.top{
+  margin: 20px 0 0 10px;
+  width:15px
+}
+.top:hover{
+  background-color: #00b894;
+  
+}
 
 .nav-links {
   list-style: none;
@@ -72,70 +74,19 @@
   padding: 5px 10px;
 }
 
-/* Topbar */
-.topbar {
-  display: flex;
-  align-items: center;
-  background-color: #dff9fb;
-  height: 60px;
-  padding: 0 20px;
-  margin-left: 250px;
-  transition: margin-left 0.3s ease;
-}
-
-.sidebar.collapsed ~ .topbar {
-  margin-left: 70px;
-}
-
-.topbar i {
-  font-size: 24px;
-  cursor: pointer;
-  color: #2d3436;
-  margin-right: 20px;
-}
-
-.topbar h1 {
-  font-size: 20px;
-  color: #2d3436;
-}
-
-/* Main content */
-.main-content {
-  margin-left: 250px;
-  padding: 20px;
-  transition: margin-left 0.3s ease;
-}
 
 .sidebar.collapsed ~ .main-content {
   margin-left: 70px;
+  width:25px;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .sidebar {
-    left: -250px;
-  }
 
-  .sidebar.show {
-    left: 0;
-  }
-
-  .topbar {
-    margin-left: 0;
-  }
-
-  .main-content {
-    margin-left: 0;
-  }
-
-  .sidebar.collapsed ~ .topbar,
-  .sidebar.collapsed ~ .main-content {
-    margin-left: 0;
-  }
-}
 
 </style>
-<div class="sidebar" id="sidebar">  
+<div class="sidebar" id="sidebar"> 
+  <div class="top">
+  <i class="fa-solid fa-bars"></i>
+  </div> 
     <ul class="nav-links">
   <li>
     <a href="{{ route('AdminDashboard') }}" class="{{ request()->routeIs('AdminDashboard') ? 'active' : '' }}">
@@ -157,6 +108,25 @@
       <i class="fas fa-cogs"></i><span>About Us Control</span>
     </a>
   </li>
+  @auth
+  @if(auth()->user()->hasRole('Super Admin'))
+  <li>
+    <a href="{{url('/users')}}" class="{{ request()->is('users') ? 'active' : '' }}">
+    <i class="fa-solid fa-users"></i><span>Users</span>
+    </a>
+  </li>
+  <li>
+    <a href="{{url('/role')}}" class="{{ request()->is('role') ? 'active' : '' }}">
+    <i class="fa-solid fa-address-book"></i><span>Roles</span>
+    </a>
+  </li>
+  <li>
+    <a href="{{url('/permission')}}"class="{{ request()->is('/permission')? 'active' : '' }}">
+    <i class="fa-regular fa-folder-open"></i><span>Perission</span>
+    </a>
+  </li>
+  @endif
+  @endauth
   <li>
   <form method="POST" action="{{ route('logout') }}" >
     @csrf
@@ -168,16 +138,14 @@
 </ul>
 
   </div>
-  <!-- <script>
-    var toggleBtn = document.getElementById('toggleBtn');
-var sidebar = document.getElementById('sidebar');
 
-toggleBtn.addEventListener('click', () => {
-  sidebar.classList.toggle('collapsed');
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const sidebar = document.getElementById("sidebar");
+    const toggleBtn = document.querySelector(".top");
 
-  // For small screens
-  if (window.innerWidth <= 768) {
-    sidebar.classList.toggle('show');
-  }
-});
-</script> -->
+    toggleBtn.addEventListener("click", function () {
+      sidebar.classList.toggle("collapsed");
+    });
+  });
+</script>

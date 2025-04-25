@@ -30,8 +30,8 @@
             <button type="submit" class="btn btn-primary mt-2">Save</button>
         </form>
     </div>
-
-    <table class="table table-bordered" id="aboutTable">
+    <div class="dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-4">
+    <table class="table table-bordered table-dark" id="aboutTable">
         <thead>
             <tr>
                 <th>ID</th>
@@ -58,6 +58,7 @@
             @endforeach
         </tbody>
     </table>
+    </div>
 </div>
 
 {{-- Styles & Scripts --}}
