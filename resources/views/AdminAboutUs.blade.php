@@ -7,9 +7,18 @@
         border-radius: 12px;
         margin-bottom: 30px;
     }
-    #editor {
-        color: black;
-        background-color: white;
+    .table{
+        margin-top:25px!important;
+    }
+    .dataTables_wrapper .dataTables_length select {
+        width :60px
+    }
+    .btnSaveAbout{
+        background-color:#00b894;
+        color:#ffffff
+    }
+    .btnSaveAbout:hover{
+        background-color:#016954;
     }
 </style>
 
@@ -27,39 +36,44 @@
             <input type="file" name="image" class="form-control mt-2" id="imageInput">
             <img id="previewImage" src="" width="100" class="mt-2 d-none"><br>
 
-            <button type="submit" class="btn btn-primary mt-2">Save</button>
+            <button type="submit" class="btn btnSaveAbout mt-2">Save</button>
         </form>
     </div>
-    <div class="dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-4">
-    <table class="table table-bordered table-dark" id="aboutTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Image</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($abouts as $about)
-            <tr>
-                <td>{{ $about->id }}</td>
-                <td><img src="{{ asset('storage/' . $about->image) }}" width="80"></td>
-                <td>{!! Str::limit(strip_tags($about->content), 60) !!}</td>
-                <td>
-                    <input type="checkbox" class="toggle-status" data-id="{{ $about->id }}" {{ $about->status ? 'checked' : '' }}>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-warning btn-sm edit-btn" data-id="{{ $about->id }}">Edit</button>
-                    <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $about->id }}">Delete</button>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    
+    <div class="overflow-hidden shadow-sm sm:rounded-lg" style="background-color:#bfc7a4">
+        <div class="p-6 text-gray-900 dark:text-gray-100">
+        <table class="table table-bordered " id="aboutTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($abouts as $about)
+                <tr>
+                    <td>{{ $about->id }}</td>
+                    <td><img src="{{ asset('storage/' . $about->image) }}" width="80"></td>
+                    <td>{!! Str::limit(strip_tags($about->content), 60) !!}</td>
+                    <td>
+                        <input type="checkbox" class="toggle-status" data-id="{{ $about->id }}" {{ $about->status ? 'checked' : '' }}>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-warning btn-sm edit-btn" data-id="{{ $about->id }}">Edit</button>
+                        <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $about->id }}">Delete</button>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        </div>
     </div>
 </div>
+
+
 
 {{-- Styles & Scripts --}}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jodit@3.24.5/build/jodit.min.css">
@@ -76,7 +90,7 @@
     defaultMode: Jodit.MODE_WYSIWYG,
     style: {
         color: 'black',
-        backgroundColor: 'white'
+        backgroundColor: 'white',   
     },
     iframe: false,
     theme: 'default'

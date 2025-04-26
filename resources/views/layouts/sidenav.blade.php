@@ -12,27 +12,36 @@
   color: #fff;
   transition: all 0.3s ease;
   overflow: hidden;
-  
+  /* position:fixed; */
+
   
 }
 
 
 .top{
-  margin: 20px 0 0 10px;
-  width:15px
+  margin:20px 0 20px 20px;
+  width:20px;
+  /* height:12px; */
+ 
 }
 .top:hover{
   background-color: #00b894;
   
 }
+.top i{
+  font-size:20px;
+}
 
 .nav-links {
   list-style: none;
   padding: 0;
+
+ 
 }
 
 .nav-links li {
   margin: 10px 0;
+  overflow:hidden;
 }
 
 .nav-links a {
@@ -42,6 +51,7 @@
   padding: 12px 20px;
   text-decoration: none;
   transition: background 0.3s;
+  
 }
 
 
@@ -56,6 +66,9 @@
   transition: opacity 0.3s;
 }
 
+.sidebar.collapsed .nav-links a{
+  height:50px;
+}
 .sidebar.collapsed a span {
   opacity: 0;
   visibility: hidden;
@@ -68,16 +81,15 @@
 .active {
   font-weight: bold;
   background-color: #00b894;
-
   color: white;
   border-radius: 5px;
   padding: 5px 10px;
 }
 
 
-.sidebar.collapsed ~ .main-content {
-  margin-left: 70px;
-  width:25px;
+.sidebar.collapsed {
+
+  width:60px;
 }
 
 
@@ -85,8 +97,8 @@
 </style>
 <div class="sidebar" id="sidebar"> 
   <div class="top">
-  <i class="fa-solid fa-bars"></i>
-  </div> 
+    <i class="fa-solid fa-bars" ></i>
+    </div> 
     <ul class="nav-links">
   <li>
     <a href="{{ route('AdminDashboard') }}" class="{{ request()->routeIs('AdminDashboard') ? 'active' : '' }}">

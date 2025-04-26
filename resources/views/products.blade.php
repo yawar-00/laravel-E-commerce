@@ -2,6 +2,15 @@
 
 @extends('layouts.master')
 @section('content')
+<style>
+    .addproductBtn{
+        background-color:#00b894;
+        color:#ffffff
+    }
+    .addproductBtn:hover{
+        background-color:#016954;
+    }
+</style>
 <!-- DataTables core CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
 
@@ -32,15 +41,15 @@
 
 <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addProductModal">
+       <div class="overflow-hidden shadow-sm sm:rounded-lg" style="background-color:#bfc7a4">
+        <div class="p-6 text-gray-900 dark:text-gray-100">
+                <button type="button" class="btn addproductBtn mb-4" data-bs-toggle="modal" data-bs-target="#addProductModal">
                  Add Product
                 </button>
 
         <div id="message"></div>
 
-        <table class="table table-dark table-bordered" id="productsTable">
+        <table class="table  table-bordered" id="productsTable">
             <thead>
                 <tr>
                     <th>id</th>

@@ -34,21 +34,20 @@
 
         .layout {
             display: flex;
+            /* flex-direction:column; */
             height: calc(100vh - 60px); /* Remaining height after header */
         }
 
-        aside {
-            width: 250px;
+        .aside {
             background-color: #34495e;
             color: white;
     
         }
 
         .content {
-            flex: 1;
-            height: calc(100vh - 60px); /* Remaining height after header */
-            overflow-y: auto;
+            flex: 1;     
             background-color:#edefca;
+            overflow:auto;
         }
         </style>
 </head>
@@ -58,9 +57,9 @@
        @include('layouts.adminNav')
     </header>
     <div class="layout">
-        <aside>
+        <div class="aside">
             @include('layouts.sidenav')
-        </aside>
+        </div>
         <div class="content">
             @yield('content')
         </div>
